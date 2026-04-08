@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Warmindo POS</title>
+  <title>Warmindo Djaya Rasa</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>"/>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
@@ -35,62 +35,70 @@
     .login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .login-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #EF4444; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; text-align: center; }
 
-    /* ── Launcher ── */
-    .launcher { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-    .launcher-header { text-align: center; margin-bottom: 32px; }
-    .launcher-logo { font-size: 64px; margin-bottom: 12px; }
-    .launcher-title { font-size: 32px; font-weight: 800; margin-bottom: 4px; }
-    .launcher-sub { font-size: 14px; color: #64748B; }
-    .launcher-user-bar {
-      display: flex; align-items: center; gap: 12px; background: #111827; border: 1px solid #1E293B;
-      border-radius: 12px; padding: 12px 20px; margin-bottom: 32px; max-width: 900px; width: 100%;
-    }
-    .launcher-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #F97316, #DC2626); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; flex-shrink: 0; }
-    .launcher-user-info { flex: 1; }
-    .launcher-user-name { font-size: 14px; font-weight: 700; }
-    .launcher-user-role { font-size: 12px; color: #94A3B8; }
-    .launcher-role-badge { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
-    .launcher-logout {
-      background: none; border: 1px solid #2A3550; color: #94A3B8; padding: 8px 16px;
-      border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
-    }
-    .launcher-logout:hover { border-color: #EF4444; color: #EF4444; }
-    .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; max-width: 900px; width: 100%; }
-    .launcher-card {
-      background: #111827; border: 1px solid #1E293B; border-radius: 16px; padding: 24px;
-      cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit; position: relative; overflow: hidden;
-    }
-    .launcher-card:hover { border-color: #F97316; transform: translateY(-4px); box-shadow: 0 8px 32px rgba(249,115,22,0.15); }
-    .launcher-card.locked { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
-    .launcher-card-lock { position: absolute; top: 12px; right: 12px; font-size: 16px; }
-    .launcher-card-emoji { font-size: 36px; margin-bottom: 12px; }
-    .launcher-card-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-    .launcher-card-ver { font-size: 11px; color: #F97316; font-weight: 600; background: rgba(249,115,22,0.1); padding: 2px 8px; border-radius: 99px; display: inline-block; margin-bottom: 8px; }
-    .launcher-card-desc { font-size: 13px; color: #94A3B8; line-height: 1.5; }
-    .launcher-card-perms { margin-top: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
-    .perm-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-    .perm-full { background: rgba(34,197,94,0.1); color: #22C55E; }
-    .perm-read { background: rgba(59,130,246,0.1); color: #3B82F6; }
-    .perm-none { background: rgba(239,68,68,0.1); color: #EF4444; }
+    /* ── Loading Screen ── */
+    .load-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; }
+    .load-logo { font-size: 56px; animation: pulse 1.5s ease infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    .load-title { font-size: 22px; font-weight: 800; }
+    .load-bar { width: 280px; height: 6px; background: #1E293B; border-radius: 3px; overflow: hidden; }
+    .load-fill { height: 100%; background: linear-gradient(90deg, #F97316, #22C55E); border-radius: 3px; transition: width 0.3s ease; }
+    .load-text { font-size: 12px; color: #64748B; }
 
-    /* ── App wrapper ── */
-    .app-wrapper { min-height: 100vh; }
-    .back-bar {
-      position: fixed; top: 0; right: 0; z-index: 9999; display: flex; gap: 8px; padding: 10px 12px;
+    /* ── Shell Layout ── */
+    .shell { display: flex; min-height: 100vh; }
+    .shell-sb {
+      width: 220px; flex-shrink: 0; background: #0C1017; border-right: 1px solid #1A2438;
+      display: flex; flex-direction: column; padding: 14px 0; position: fixed; top: 0; left: 0; bottom: 0; z-index: 200;
+      overflow-y: auto;
     }
-    .back-btn, .user-btn {
-      background: rgba(17,24,39,0.92); border: 1px solid #2A3550; color: #94A3B8;
-      padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
-      cursor: pointer; backdrop-filter: blur(8px); transition: all 0.15s;
-      font-family: inherit; display: flex; align-items: center; gap: 6px;
+    .shell-sb::-webkit-scrollbar { width: 0; }
+    .shell-logo { display: flex; align-items: center; gap: 8px; padding: 0 14px; margin-bottom: 20px; }
+    .shell-logo-ic { width: 36px; height: 36px; background: linear-gradient(135deg, #F97316, #DC2626); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 4px 16px rgba(249,115,22,0.3); flex-shrink: 0; }
+    .shell-logo-t { font-size: 13px; font-weight: 800; line-height: 1.2; }
+    .shell-logo-s { font-size: 7px; color: #4F5D78; font-weight: 700; letter-spacing: 0.08em; }
+    .shell-lbl { font-size: 7px; font-weight: 700; color: #4F5D78; text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 14px 4px; }
+    .shell-nav-item {
+      display: flex; align-items: center; gap: 8px; padding: 9px 14px; margin: 1px 6px; border-radius: 8px;
+      cursor: pointer; font-size: 12px; font-weight: 500; color: #728BA6; transition: all 0.15s; user-select: none;
     }
-    .back-btn:hover { border-color: #F97316; color: #F97316; }
-    .user-btn { cursor: default; }
-    .user-btn .role-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .shell-nav-item:hover { background: #151D30; color: #C8D5E3; }
+    .shell-nav-item.on { background: rgba(249,115,22,0.1); color: #F97316; font-weight: 700; }
+    .shell-nav-em { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+    .shell-nav-perm { font-size: 8px; color: #3B82F6; margin-left: auto; opacity: 0.7; }
+    .shell-sp { flex: 1; }
+    .shell-user { padding: 12px 14px; border-top: 1px solid #1A2438; margin-top: 6px; }
+    .shell-user-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .shell-avatar { width: 32px; height: 32px; background: linear-gradient(135deg, #F97316, #DC2626); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .shell-user-name { font-size: 12px; font-weight: 700; }
+    .shell-user-role { font-size: 10px; }
+    .shell-logout {
+      width: 100%; height: 32px; background: none; border: 1px solid #2A3550; color: #728BA6;
+      border-radius: 8px; font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    }
+    .shell-logout:hover { border-color: #EF4444; color: #EF4444; }
+    .shell-content { margin-left: 220px; flex: 1; min-height: 100vh; }
 
-    /* ── Loading ── */
-    .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; font-size: 18px; color: #64748B; }
-    .loading::after { content: ''; width: 24px; height: 24px; border: 3px solid #1E293B; border-top-color: #F97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 12px; }
+    /* ── Hide module internal sidebars ── */
+    .mod-wrap .W > nav.S,
+    .mod-wrap .app > nav.sb,
+    .mod-wrap .A > nav.S { display: none !important; }
+
+    .mod-wrap .W > .M,
+    .mod-wrap .app > .mn,
+    .mod-wrap .app > .main,
+    .mod-wrap .A > .MN { width: 100% !important; flex: 1 !important; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .shell-sb { width: 56px; }
+      .shell-logo-t, .shell-logo-s, .shell-lbl, .shell-nav-item span:not(.shell-nav-em), .shell-nav-perm, .shell-user-name, .shell-user-role { display: none; }
+      .shell-nav-item { justify-content: center; padding: 10px; margin: 1px 4px; }
+      .shell-content { margin-left: 56px; }
+      .shell-user-row { justify-content: center; }
+      .shell-logout { font-size: 0; }
+      .shell-logout::after { content: '↩'; font-size: 14px; }
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -102,18 +110,18 @@
 <body>
   <div id="root"></div>
   <script type="text/babel" data-type="module">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useCallback, useRef } = React;
 
     // ═══════════════════════════════════════════════════════════════
-    // RBAC — Roles, Users, Permissions
+    // RBAC
     // ═══════════════════════════════════════════════════════════════
 
     const ROLES = {
-      owner:   { name: "Owner",   color: "#F97316", bg: "rgba(249,115,22,0.15)", level: 100 },
-      manager: { name: "Manager", color: "#8B5CF6", bg: "rgba(139,92,246,0.15)", level: 80 },
-      kasir:   { name: "Kasir",   color: "#3B82F6", bg: "rgba(59,130,246,0.15)", level: 50 },
-      koki:    { name: "Koki",    color: "#22C55E", bg: "rgba(34,197,94,0.15)",  level: 40 },
-      viewer:  { name: "Viewer",  color: "#64748B", bg: "rgba(100,116,139,0.15)", level: 10 },
+      owner:   { name: "Owner",   color: "#F97316", bg: "rgba(249,115,22,0.15)" },
+      manager: { name: "Manager", color: "#8B5CF6", bg: "rgba(139,92,246,0.15)" },
+      kasir:   { name: "Kasir",   color: "#3B82F6", bg: "rgba(59,130,246,0.15)" },
+      koki:    { name: "Koki",    color: "#22C55E", bg: "rgba(34,197,94,0.15)" },
+      viewer:  { name: "Viewer",  color: "#64748B", bg: "rgba(100,116,139,0.15)" },
     };
 
     const USERS = [
@@ -125,29 +133,44 @@
       { username: "viewer",   password: "viewer123",   role: "viewer",  fullName: "Rina Wati",      avatar: "R" },
     ];
 
-    // Permission per app per role: "full" | "read" | "none"
     const PERMISSIONS = {
       "pos-v3":     { owner: "full", manager: "full", kasir: "full", koki: "read",  viewer: "none" },
       "table-crm":  { owner: "full", manager: "full", kasir: "read", koki: "full",  viewer: "none" },
       "dashboard":  { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "read" },
       "cash-mgmt":  { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "none" },
-      "migration":  { owner: "full", manager: "none", kasir: "none", koki: "none",  viewer: "none" },
       "djaya-rasa": { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "read" },
-      "pos-v1":     { owner: "full", manager: "full", kasir: "full", koki: "none",  viewer: "none" },
+      "migration":  { owner: "full", manager: "none", kasir: "none", koki: "none",  viewer: "none" },
     };
 
-    const getPermission = (appId, role) => PERMISSIONS[appId]?.[role] || "none";
-    const canAccess = (appId, role) => getPermission(appId, role) !== "none";
+    const canAccess = (id, role) => (PERMISSIONS[id]?.[role] || "none") !== "none";
+    const getPerm = (id, role) => PERMISSIONS[id]?.[role] || "none";
 
     const APPS = [
-      { id: "pos-v3",    emoji: "🍜", title: "POS Enterprise",      ver: "v3.0", desc: "Multi-cabang, 12 metode pembayaran, karyawan, CCTV, inventori",          file: "warmindo-pos-v3.jsx" },
-      { id: "table-crm", emoji: "🪑", title: "Table + CRM",         ver: "v5.0", desc: "Manajemen meja, QR self-order, customer loyalty, feedback",              file: "warmindo-table-crm.jsx" },
-      { id: "dashboard",  emoji: "📊", title: "Dashboard Keuangan",  ver: "v4.0", desc: "Laporan harian, payroll, stok gudang, analisis channel & pengeluaran",   file: "warmindo-dashboard.jsx" },
-      { id: "cash-mgmt", emoji: "💼", title: "Cash Management",      ver: "v6.0", desc: "Pemisahan 5 kas, rekonsiliasi, waterfall P&L, SOP kasir",                file: "warmindo-cash-mgmt.jsx" },
-      { id: "migration", emoji: "🔄", title: "Migration Tool",       ver: "v1.0", desc: "Migrasi data Qasir → Warmindo POS, CSV import, field mapping",           file: "warmindo-migration-tool.jsx" },
-      { id: "djaya-rasa",emoji: "🔥", title: "Djaya Rasa Analytics", ver: "v1.0", desc: "Data riil Qasir: 10.526 item, 2.695 transaksi, best sellers, insights",  file: "warmindo-djaya-rasa-dashboard.jsx" },
-      { id: "pos-v1",    emoji: "💵", title: "POS Kasir",            ver: "v1.0", desc: "Kasir sederhana — produk, keranjang, pembayaran, struk, laporan",         file: "warmindo-pos.jsx" },
+      { id: "pos-v3",    emoji: "🍜", title: "POS / Kasir",          file: "warmindo-pos-v3.jsx" },
+      { id: "table-crm", emoji: "🪑", title: "Table + CRM",          file: "warmindo-table-crm.jsx" },
+      { id: "dashboard",  emoji: "📊", title: "Dashboard",            file: "warmindo-dashboard.jsx" },
+      { id: "cash-mgmt", emoji: "💼", title: "Cash Management",       file: "warmindo-cash-mgmt.jsx" },
+      { id: "djaya-rasa", emoji: "🔥", title: "Analytics Qasir",      file: "warmindo-djaya-rasa-dashboard.jsx" },
+      { id: "migration", emoji: "🔄", title: "Migration Tool",        file: "warmindo-migration-tool.jsx" },
     ];
+
+    // ═══════════════════════════════════════════════════════════════
+    // MODULE COMPILER
+    // ═══════════════════════════════════════════════════════════════
+
+    function compileModule(file) {
+      return fetch(file)
+        .then(r => { if (!r.ok) throw new Error("Gagal memuat " + file); return r.text(); })
+        .then(code => {
+          let processed = code
+            .replace(/^import\s+.*?from\s+["']react["'];?\s*$/gm, "")
+            .replace(/^export\s+default\s+/gm, "const __EXPORT__ = ");
+          const preamble = "const { useState, useEffect, useCallback, useMemo, useRef, Fragment } = React;\n";
+          const transformed = Babel.transform(preamble + processed, { presets: ["react"], filename: file }).code;
+          const fn = new Function("React", "ReactDOM", transformed + "\nreturn __EXPORT__;");
+          return fn(React, ReactDOM);
+        });
+    }
 
     // ═══════════════════════════════════════════════════════════════
     // LOGIN PAGE
@@ -160,16 +183,10 @@
       const [loading, setLoading] = useState(false);
 
       const handleSubmit = (e) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
+        e.preventDefault(); setError(""); setLoading(true);
         setTimeout(() => {
           const user = USERS.find(u => u.username === username.toLowerCase().trim() && u.password === password);
-          if (user) {
-            onLogin(user);
-          } else {
-            setError("Username atau password salah!");
-          }
+          if (user) onLogin(user); else setError("Username atau password salah!");
           setLoading(false);
         }, 400);
       };
@@ -179,12 +196,10 @@
           <div className="login-box">
             <div className="login-logo">
               <div className="login-logo-icon">🔥</div>
-              <div className="login-logo-title">Warmindo POS</div>
+              <div className="login-logo-title">Warmindo Djaya Rasa</div>
               <div className="login-logo-sub">Masuk untuk melanjutkan</div>
             </div>
-
             {error && <div className="login-error">{error}</div>}
-
             <form onSubmit={handleSubmit}>
               <div className="login-field">
                 <label className="login-label">Username</label>
@@ -200,111 +215,103 @@
                 {loading ? "Memverifikasi..." : "Masuk"}
               </button>
             </form>
-
           </div>
         </div>
       );
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // LAUNCHER (with RBAC)
+    // LOADING SCREEN
     // ═══════════════════════════════════════════════════════════════
 
-    function Launcher({ user, onSelect, onLogout }) {
-      const role = ROLES[user.role];
-      const permLabel = { full: "Full Access", read: "View Only", none: "Terkunci" };
-      const permClass = { full: "perm-full", read: "perm-read", none: "perm-none" };
-
+    function LoadingScreen({ progress, total }) {
       return (
-        <div className="launcher">
-          <div className="launcher-header">
-            <div className="launcher-logo">🔥</div>
-            <div className="launcher-title">Warmindo POS</div>
-            <div className="launcher-sub">Sistem Manajemen Warung Makan Indonesia</div>
+        <div className="load-screen">
+          <div className="load-logo">🔥</div>
+          <div className="load-title">Warmindo Djaya Rasa</div>
+          <div className="load-bar">
+            <div className="load-fill" style={{ width: `${(progress / total) * 100}%` }} />
           </div>
-
-          <div className="launcher-user-bar">
-            <div className="launcher-avatar">{user.avatar}</div>
-            <div className="launcher-user-info">
-              <div className="launcher-user-name">{user.fullName}</div>
-              <div className="launcher-user-role">@{user.username}</div>
-            </div>
-            <span className="launcher-role-badge" style={{ background: role.bg, color: role.color }}>{role.name}</span>
-            <button className="launcher-logout" onClick={onLogout}>Logout</button>
-          </div>
-
-          <div className="launcher-grid">
-            {APPS.map(app => {
-              const perm = getPermission(app.id, user.role);
-              const locked = perm === "none";
-              return (
-                <div key={app.id} className={`launcher-card ${locked ? "locked" : ""}`}
-                  onClick={() => !locked && onSelect(app)}>
-                  {locked && <div className="launcher-card-lock">🔒</div>}
-                  <div className="launcher-card-emoji">{app.emoji}</div>
-                  <div className="launcher-card-title">{app.title}</div>
-                  <span className="launcher-card-ver">{app.ver}</span>
-                  <div className="launcher-card-desc">{app.desc}</div>
-                  <div className="launcher-card-perms">
-                    <span className={`perm-tag ${permClass[perm]}`}>{permLabel[perm]}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <div className="load-text">Memuat modul {progress}/{total}...</div>
         </div>
       );
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // APP LOADER
+    // UNIFIED SHELL
     // ═══════════════════════════════════════════════════════════════
 
-    function AppLoader({ app, user, onBack }) {
-      const [Comp, setComp] = useState(null);
-      const [error, setError] = useState(null);
-      const perm = getPermission(app.id, user.role);
+    function Shell({ user, modules, onLogout }) {
       const role = ROLES[user.role];
+      const available = APPS.filter(a => canAccess(a.id, user.role));
+
+      const [active, setActive] = useState(() => {
+        const hash = window.location.hash.slice(1);
+        if (hash && available.find(a => a.id === hash)) return hash;
+        return available[0]?.id || "pos-v3";
+      });
 
       useEffect(() => {
-        setComp(null);
-        setError(null);
-        fetch(app.file)
-          .then(r => { if (!r.ok) throw new Error(`Gagal memuat ${app.file}`); return r.text(); })
-          .then(code => {
-            let processed = code
-              .replace(/^import\s+.*?from\s+["']react["'];?\s*$/gm, '')
-              .replace(/^export\s+default\s+/gm, 'const __EXPORT__ = ');
-            const preamble = `const { useState, useEffect, useCallback, useMemo, useRef, Fragment } = React;\n`;
-            const transformed = Babel.transform(preamble + processed, { presets: ['react'], filename: app.file }).code;
-            const fn = new Function('React', 'ReactDOM', transformed + '\n return __EXPORT__;');
-            const Component = fn(React, ReactDOM);
-            setComp(() => Component);
-          })
-          .catch(err => { console.error(err); setError(err.message); });
-      }, [app]);
+        const handler = () => {
+          const hash = window.location.hash.slice(1);
+          if (hash && canAccess(hash, user.role)) setActive(hash);
+        };
+        window.addEventListener("popstate", handler);
+        return () => window.removeEventListener("popstate", handler);
+      }, [user.role]);
 
-      if (error) return (
-        <div className="loading" style={{flexDirection:'column', gap: 12}}>
-          <div style={{color:'#EF4444'}}>Error: {error}</div>
-          <button className="back-btn" style={{position:'static'}} onClick={onBack}>Kembali</button>
-        </div>
-      );
-      if (!Comp) return <div className="loading">Memuat {app.title}...</div>;
+      const switchModule = (id) => {
+        setActive(id);
+        window.history.pushState({}, "", "#" + id);
+      };
+
+      const ActiveComp = modules[active];
 
       return (
-        <div className="app-wrapper">
-          <div className="back-bar">
-            <div className="user-btn">
-              <span className="role-dot" style={{ background: role.color }}></span>
-              {user.fullName}
-              <span style={{ color: role.color, fontSize: 10, fontWeight: 700 }}>
-                {role.name}{perm === "read" ? " · View Only" : ""}
-              </span>
+        <div className="shell">
+          {/* ── Sidebar ── */}
+          <nav className="shell-sb">
+            <div className="shell-logo">
+              <div className="shell-logo-ic">🔥</div>
+              <div>
+                <div className="shell-logo-t">Warmindo</div>
+                <div className="shell-logo-s">DJAYA RASA</div>
+              </div>
             </div>
-            <button className="back-btn" onClick={onBack}>← Menu</button>
+
+            <div className="shell-lbl">Modules</div>
+            {available.map(app => (
+              <div key={app.id}
+                className={`shell-nav-item ${active === app.id ? "on" : ""}`}
+                onClick={() => switchModule(app.id)}>
+                <span className="shell-nav-em">{app.emoji}</span>
+                <span>{app.title}</span>
+                {getPerm(app.id, user.role) === "read" && <span className="shell-nav-perm">view</span>}
+              </div>
+            ))}
+
+            <div className="shell-sp" />
+
+            <div className="shell-user">
+              <div className="shell-user-row">
+                <div className="shell-avatar">{user.avatar}</div>
+                <div>
+                  <div className="shell-user-name">{user.fullName}</div>
+                  <div className="shell-user-role" style={{ color: role.color }}>{role.name}</div>
+                </div>
+              </div>
+              <button className="shell-logout" onClick={onLogout}>Logout</button>
+            </div>
+          </nav>
+
+          {/* ── Module Content ── */}
+          <div className="shell-content mod-wrap">
+            {ActiveComp ? <ActiveComp /> : (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", color: "#64748B" }}>
+                Modul tidak tersedia
+              </div>
+            )}
           </div>
-          <Comp />
         </div>
       );
     }
@@ -317,30 +324,38 @@
       const [user, setUser] = useState(() => {
         try { const s = sessionStorage.getItem("warmindo_session"); return s ? JSON.parse(s) : null; } catch { return null; }
       });
-      const [selected, setSelected] = useState(null);
+      const [modules, setModules] = useState(null);
+      const [loadProgress, setLoadProgress] = useState(0);
 
       useEffect(() => {
         if (user) sessionStorage.setItem("warmindo_session", JSON.stringify(user));
         else sessionStorage.removeItem("warmindo_session");
       }, [user]);
 
+      // Preload all modules after login
       useEffect(() => {
-        const handler = () => { if (selected) setSelected(null); };
-        window.addEventListener('popstate', handler);
-        return () => window.removeEventListener('popstate', handler);
-      }, [selected]);
+        if (!user || modules) return;
+        const map = {};
+        let done = 0;
+        Promise.all(APPS.map(app =>
+          compileModule(app.file)
+            .then(comp => { map[app.id] = comp; done++; setLoadProgress(done); })
+            .catch(err => { console.error("Failed to compile " + app.file, err); done++; setLoadProgress(done); })
+        )).then(() => setModules(map));
+      }, [user]);
 
-      const handleLogin = (u) => setUser(u);
-      const handleLogout = () => { setUser(null); setSelected(null); sessionStorage.removeItem("warmindo_session"); };
-      const handleSelect = (app) => { window.history.pushState({}, '', '#' + app.id); setSelected(app); };
-      const handleBack = () => { window.history.pushState({}, '', window.location.pathname); setSelected(null); };
+      const handleLogout = () => {
+        setUser(null); setModules(null); setLoadProgress(0);
+        sessionStorage.removeItem("warmindo_session");
+        window.history.pushState({}, "", window.location.pathname);
+      };
 
-      if (!user) return <LoginPage onLogin={handleLogin} />;
-      if (selected) return <AppLoader app={selected} user={user} onBack={handleBack} />;
-      return <Launcher user={user} onSelect={handleSelect} onLogout={handleLogout} />;
+      if (!user) return <LoginPage onLogin={setUser} />;
+      if (!modules) return <LoadingScreen progress={loadProgress} total={APPS.length} />;
+      return <Shell user={user} modules={modules} onLogout={handleLogout} />;
     }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   </script>
 </body>
 </html>
