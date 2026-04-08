@@ -901,7 +901,7 @@ export default function WarmindoPOS(){
   const[sr,sSr]=useState("");
   const[payOpen,sPO]=useState(false);
   const[payTot,sPT]=useState(0);
-  const[shop,sShop]=useLS("w3_shop","Warmindo Jaya");
+  const[shop,sShop]=useLS("w3_shop","Warmindo Djaya Rasa");
 
   const brN=brs.find(b=>b.id===cb)?.name||"Warmindo Pusat";
   const onPay=t=>{sPT(t);sPO(true)};

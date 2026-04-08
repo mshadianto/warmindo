@@ -443,7 +443,7 @@ const SelfOrderPreview=({tableNum,onClose,menu})=>{
     {step==="menu"&&<>
       <div style={{textAlign:"center",marginBottom:12}}>
         <div style={{fontSize:36}}>🔥</div>
-        <div style={{fontSize:16,fontWeight:800}}>Warmindo Jaya</div>
+        <div style={{fontSize:16,fontWeight:800}}>Warmindo Djaya Rasa</div>
         <div style={{fontSize:11,color:"var(--t3)"}}>Meja #{tableNum} — Self-Order</div>
       </div>
       <div className="tabs" style={{marginBottom:8}}>
