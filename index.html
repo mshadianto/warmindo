@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Warmindo POS</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif; background: #050810; color: #F1F5F9; min-height: 100vh; }
+
+    /* ── Login ── */
+    .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, #050810 0%, #0A1628 50%, #050810 100%); }
+    .login-box { background: #111827; border: 1px solid #1E293B; border-radius: 20px; padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 24px 64px rgba(0,0,0,0.5); }
+    .login-logo { text-align: center; margin-bottom: 28px; }
+    .login-logo-icon { font-size: 48px; margin-bottom: 8px; }
+    .login-logo-title { font-size: 24px; font-weight: 800; }
+    .login-logo-sub { font-size: 12px; color: #64748B; margin-top: 4px; }
+    .login-field { margin-bottom: 16px; }
+    .login-label { display: block; font-size: 12px; font-weight: 600; color: #94A3B8; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .login-input {
+      width: 100%; height: 48px; background: #0A0F1C; border: 1px solid #2A3550; border-radius: 10px;
+      padding: 0 16px; font-family: inherit; font-size: 14px; color: #F1F5F9; outline: none; transition: border-color 0.2s;
+    }
+    .login-input:focus { border-color: #F97316; }
+    .login-input::placeholder { color: #4F5D78; }
+    .login-btn {
+      width: 100%; height: 48px; background: linear-gradient(135deg, #F97316, #EA580C); color: white; border: none;
+      border-radius: 10px; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: all 0.2s; box-shadow: 0 4px 16px rgba(249,115,22,0.3); margin-top: 8px;
+    }
+    .login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(249,115,22,0.4); }
+    .login-btn:active { transform: translateY(0); }
+    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .login-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #EF4444; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; text-align: center; }
+
+    /* ── Launcher ── */
+    .launcher { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+    .launcher-header { text-align: center; margin-bottom: 32px; }
+    .launcher-logo { font-size: 64px; margin-bottom: 12px; }
+    .launcher-title { font-size: 32px; font-weight: 800; margin-bottom: 4px; }
+    .launcher-sub { font-size: 14px; color: #64748B; }
+    .launcher-user-bar {
+      display: flex; align-items: center; gap: 12px; background: #111827; border: 1px solid #1E293B;
+      border-radius: 12px; padding: 12px 20px; margin-bottom: 32px; max-width: 900px; width: 100%;
+    }
+    .launcher-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #F97316, #DC2626); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+    .launcher-user-info { flex: 1; }
+    .launcher-user-name { font-size: 14px; font-weight: 700; }
+    .launcher-user-role { font-size: 12px; color: #94A3B8; }
+    .launcher-role-badge { padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+    .launcher-logout {
+      background: none; border: 1px solid #2A3550; color: #94A3B8; padding: 8px 16px;
+      border-radius: 8px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+    }
+    .launcher-logout:hover { border-color: #EF4444; color: #EF4444; }
+    .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; max-width: 900px; width: 100%; }
+    .launcher-card {
+      background: #111827; border: 1px solid #1E293B; border-radius: 16px; padding: 24px;
+      cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit; position: relative; overflow: hidden;
+    }
+    .launcher-card:hover { border-color: #F97316; transform: translateY(-4px); box-shadow: 0 8px 32px rgba(249,115,22,0.15); }
+    .launcher-card.locked { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+    .launcher-card-lock { position: absolute; top: 12px; right: 12px; font-size: 16px; }
+    .launcher-card-emoji { font-size: 36px; margin-bottom: 12px; }
+    .launcher-card-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .launcher-card-ver { font-size: 11px; color: #F97316; font-weight: 600; background: rgba(249,115,22,0.1); padding: 2px 8px; border-radius: 99px; display: inline-block; margin-bottom: 8px; }
+    .launcher-card-desc { font-size: 13px; color: #94A3B8; line-height: 1.5; }
+    .launcher-card-perms { margin-top: 10px; display: flex; gap: 4px; flex-wrap: wrap; }
+    .perm-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+    .perm-full { background: rgba(34,197,94,0.1); color: #22C55E; }
+    .perm-read { background: rgba(59,130,246,0.1); color: #3B82F6; }
+    .perm-none { background: rgba(239,68,68,0.1); color: #EF4444; }
+
+    /* ── App wrapper ── */
+    .app-wrapper { min-height: 100vh; }
+    .back-bar {
+      position: fixed; top: 0; right: 0; z-index: 9999; display: flex; gap: 8px; padding: 10px 12px;
+    }
+    .back-btn, .user-btn {
+      background: rgba(17,24,39,0.92); border: 1px solid #2A3550; color: #94A3B8;
+      padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; backdrop-filter: blur(8px); transition: all 0.15s;
+      font-family: inherit; display: flex; align-items: center; gap: 6px;
+    }
+    .back-btn:hover { border-color: #F97316; color: #F97316; }
+    .user-btn { cursor: default; }
+    .user-btn .role-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+    /* ── Loading ── */
+    .loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; font-size: 18px; color: #64748B; }
+    .loading::after { content: ''; width: 24px; height: 24px; border: 3px solid #1E293B; border-top-color: #F97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin-left: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="warmindo-db.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-type="module">
+    const { useState, useEffect } = React;
+
+    // ═══════════════════════════════════════════════════════════════
+    // RBAC — Roles, Users, Permissions
+    // ═══════════════════════════════════════════════════════════════
+
+    const ROLES = {
+      owner:   { name: "Owner",   color: "#F97316", bg: "rgba(249,115,22,0.15)", level: 100 },
+      manager: { name: "Manager", color: "#8B5CF6", bg: "rgba(139,92,246,0.15)", level: 80 },
+      kasir:   { name: "Kasir",   color: "#3B82F6", bg: "rgba(59,130,246,0.15)", level: 50 },
+      koki:    { name: "Koki",    color: "#22C55E", bg: "rgba(34,197,94,0.15)",  level: 40 },
+      viewer:  { name: "Viewer",  color: "#64748B", bg: "rgba(100,116,139,0.15)", level: 10 },
+    };
+
+    const USERS = [
+      { username: "owner",    password: "owner123",    role: "owner",   fullName: "Pak Hadi",       avatar: "H" },
+      { username: "manager",  password: "manager123",  role: "manager", fullName: "Siti Aisyah",    avatar: "S" },
+      { username: "kasir1",   password: "kasir123",    role: "kasir",   fullName: "Ahmad Rizki",    avatar: "A" },
+      { username: "kasir2",   password: "kasir123",    role: "kasir",   fullName: "Dewi Lestari",   avatar: "D" },
+      { username: "koki",     password: "dapur123",    role: "koki",    fullName: "Budi Santoso",   avatar: "B" },
+      { username: "viewer",   password: "viewer123",   role: "viewer",  fullName: "Rina Wati",      avatar: "R" },
+    ];
+
+    // Permission per app per role: "full" | "read" | "none"
+    const PERMISSIONS = {
+      "pos-v3":     { owner: "full", manager: "full", kasir: "full", koki: "read",  viewer: "none" },
+      "table-crm":  { owner: "full", manager: "full", kasir: "read", koki: "full",  viewer: "none" },
+      "dashboard":  { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "read" },
+      "cash-mgmt":  { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "none" },
+      "migration":  { owner: "full", manager: "none", kasir: "none", koki: "none",  viewer: "none" },
+      "djaya-rasa": { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "read" },
+      "pos-v1":     { owner: "full", manager: "full", kasir: "full", koki: "none",  viewer: "none" },
+    };
+
+    const getPermission = (appId, role) => PERMISSIONS[appId]?.[role] || "none";
+    const canAccess = (appId, role) => getPermission(appId, role) !== "none";
+
+    const APPS = [
+      { id: "pos-v3",    emoji: "🍜", title: "POS Enterprise",      ver: "v3.0", desc: "Multi-cabang, 12 metode pembayaran, karyawan, CCTV, inventori",          file: "warmindo-pos-v3.jsx" },
+      { id: "table-crm", emoji: "🪑", title: "Table + CRM",         ver: "v5.0", desc: "Manajemen meja, QR self-order, customer loyalty, feedback",              file: "warmindo-table-crm.jsx" },
+      { id: "dashboard",  emoji: "📊", title: "Dashboard Keuangan",  ver: "v4.0", desc: "Laporan harian, payroll, stok gudang, analisis channel & pengeluaran",   file: "warmindo-dashboard.jsx" },
+      { id: "cash-mgmt", emoji: "💼", title: "Cash Management",      ver: "v6.0", desc: "Pemisahan 5 kas, rekonsiliasi, waterfall P&L, SOP kasir",                file: "warmindo-cash-mgmt.jsx" },
+      { id: "migration", emoji: "🔄", title: "Migration Tool",       ver: "v1.0", desc: "Migrasi data Qasir → Warmindo POS, CSV import, field mapping",           file: "warmindo-migration-tool.jsx" },
+      { id: "djaya-rasa",emoji: "🔥", title: "Djaya Rasa Analytics", ver: "v1.0", desc: "Data riil Qasir: 10.526 item, 2.695 transaksi, best sellers, insights",  file: "warmindo-djaya-rasa-dashboard.jsx" },
+      { id: "pos-v1",    emoji: "💵", title: "POS Kasir",            ver: "v1.0", desc: "Kasir sederhana — produk, keranjang, pembayaran, struk, laporan",         file: "warmindo-pos.jsx" },
+    ];
+
+    // ═══════════════════════════════════════════════════════════════
+    // LOGIN PAGE
+    // ═══════════════════════════════════════════════════════════════
+
+    function LoginPage({ onLogin }) {
+      const [username, setUsername] = useState("");
+      const [password, setPassword] = useState("");
+      const [error, setError] = useState("");
+      const [loading, setLoading] = useState(false);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        setError("");
+        setLoading(true);
+        setTimeout(() => {
+          const user = USERS.find(u => u.username === username.toLowerCase().trim() && u.password === password);
+          if (user) {
+            onLogin(user);
+          } else {
+            setError("Username atau password salah!");
+          }
+          setLoading(false);
+        }, 400);
+      };
+
+      return (
+        <div className="login-page">
+          <div className="login-box">
+            <div className="login-logo">
+              <div className="login-logo-icon">🔥</div>
+              <div className="login-logo-title">Warmindo POS</div>
+              <div className="login-logo-sub">Masuk untuk melanjutkan</div>
+            </div>
+
+            {error && <div className="login-error">{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+              <div className="login-field">
+                <label className="login-label">Username</label>
+                <input className="login-input" type="text" placeholder="Masukkan username" autoFocus
+                  value={username} onChange={e => setUsername(e.target.value)} autoComplete="username" />
+              </div>
+              <div className="login-field">
+                <label className="login-label">Password</label>
+                <input className="login-input" type="password" placeholder="Masukkan password"
+                  value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" />
+              </div>
+              <button className="login-btn" type="submit" disabled={loading || !username || !password}>
+                {loading ? "Memverifikasi..." : "Masuk"}
+              </button>
+            </form>
+
+          </div>
+        </div>
+      );
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // LAUNCHER (with RBAC)
+    // ═══════════════════════════════════════════════════════════════
+
+    function Launcher({ user, onSelect, onLogout }) {
+      const role = ROLES[user.role];
+      const permLabel = { full: "Full Access", read: "View Only", none: "Terkunci" };
+      const permClass = { full: "perm-full", read: "perm-read", none: "perm-none" };
+
+      return (
+        <div className="launcher">
+          <div className="launcher-header">
+            <div className="launcher-logo">🔥</div>
+            <div className="launcher-title">Warmindo POS</div>
+            <div className="launcher-sub">Sistem Manajemen Warung Makan Indonesia</div>
+          </div>
+
+          <div className="launcher-user-bar">
+            <div className="launcher-avatar">{user.avatar}</div>
+            <div className="launcher-user-info">
+              <div className="launcher-user-name">{user.fullName}</div>
+              <div className="launcher-user-role">@{user.username}</div>
+            </div>
+            <span className="launcher-role-badge" style={{ background: role.bg, color: role.color }}>{role.name}</span>
+            <button className="launcher-logout" onClick={onLogout}>Logout</button>
+          </div>
+
+          <div className="launcher-grid">
+            {APPS.map(app => {
+              const perm = getPermission(app.id, user.role);
+              const locked = perm === "none";
+              return (
+                <div key={app.id} className={`launcher-card ${locked ? "locked" : ""}`}
+                  onClick={() => !locked && onSelect(app)}>
+                  {locked && <div className="launcher-card-lock">🔒</div>}
+                  <div className="launcher-card-emoji">{app.emoji}</div>
+                  <div className="launcher-card-title">{app.title}</div>
+                  <span className="launcher-card-ver">{app.ver}</span>
+                  <div className="launcher-card-desc">{app.desc}</div>
+                  <div className="launcher-card-perms">
+                    <span className={`perm-tag ${permClass[perm]}`}>{permLabel[perm]}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // APP LOADER
+    // ═══════════════════════════════════════════════════════════════
+
+    function AppLoader({ app, user, onBack }) {
+      const [Comp, setComp] = useState(null);
+      const [error, setError] = useState(null);
+      const perm = getPermission(app.id, user.role);
+      const role = ROLES[user.role];
+
+      useEffect(() => {
+        setComp(null);
+        setError(null);
+        fetch(app.file)
+          .then(r => { if (!r.ok) throw new Error(`Gagal memuat ${app.file}`); return r.text(); })
+          .then(code => {
+            let processed = code
+              .replace(/^import\s+.*?from\s+["']react["'];?\s*$/gm, '')
+              .replace(/^export\s+default\s+/gm, 'const __EXPORT__ = ');
+            const preamble = `const { useState, useEffect, useCallback, useMemo, useRef, Fragment } = React;\n`;
+            const transformed = Babel.transform(preamble + processed, { presets: ['react'], filename: app.file }).code;
+            const fn = new Function('React', 'ReactDOM', transformed + '\n return __EXPORT__;');
+            const Component = fn(React, ReactDOM);
+            setComp(() => Component);
+          })
+          .catch(err => { console.error(err); setError(err.message); });
+      }, [app]);
+
+      if (error) return (
+        <div className="loading" style={{flexDirection:'column', gap: 12}}>
+          <div style={{color:'#EF4444'}}>Error: {error}</div>
+          <button className="back-btn" style={{position:'static'}} onClick={onBack}>Kembali</button>
+        </div>
+      );
+      if (!Comp) return <div className="loading">Memuat {app.title}...</div>;
+
+      return (
+        <div className="app-wrapper">
+          <div className="back-bar">
+            <div className="user-btn">
+              <span className="role-dot" style={{ background: role.color }}></span>
+              {user.fullName}
+              <span style={{ color: role.color, fontSize: 10, fontWeight: 700 }}>
+                {role.name}{perm === "read" ? " · View Only" : ""}
+              </span>
+            </div>
+            <button className="back-btn" onClick={onBack}>← Menu</button>
+          </div>
+          <Comp />
+        </div>
+      );
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // MAIN APP
+    // ═══════════════════════════════════════════════════════════════
+
+    function App() {
+      const [user, setUser] = useState(() => {
+        try { const s = sessionStorage.getItem("warmindo_session"); return s ? JSON.parse(s) : null; } catch { return null; }
+      });
+      const [selected, setSelected] = useState(null);
+
+      useEffect(() => {
+        if (user) sessionStorage.setItem("warmindo_session", JSON.stringify(user));
+        else sessionStorage.removeItem("warmindo_session");
+      }, [user]);
+
+      useEffect(() => {
+        const handler = () => { if (selected) setSelected(null); };
+        window.addEventListener('popstate', handler);
+        return () => window.removeEventListener('popstate', handler);
+      }, [selected]);
+
+      const handleLogin = (u) => setUser(u);
+      const handleLogout = () => { setUser(null); setSelected(null); sessionStorage.removeItem("warmindo_session"); };
+      const handleSelect = (app) => { window.history.pushState({}, '', '#' + app.id); setSelected(app); };
+      const handleBack = () => { window.history.pushState({}, '', window.location.pathname); setSelected(null); };
+
+      if (!user) return <LoginPage onLogin={handleLogin} />;
+      if (selected) return <AppLoader app={selected} user={user} onBack={handleBack} />;
+      return <Launcher user={user} onSelect={handleSelect} onLogout={handleLogout} />;
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
