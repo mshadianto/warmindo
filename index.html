@@ -140,6 +140,7 @@
       "cash-mgmt":  { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "none" },
       "djaya-rasa": { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "read" },
       "migration":  { owner: "full", manager: "none", kasir: "none", koki: "none",  viewer: "none" },
+      "user-menu":  { owner: "full", manager: "full", kasir: "none", koki: "none",  viewer: "none" },
     };
 
     const canAccess = (id, role) => (PERMISSIONS[id]?.[role] || "none") !== "none";
@@ -152,6 +153,7 @@
       { id: "cash-mgmt", emoji: "💼", title: "Cash Management",       file: "warmindo-cash-mgmt.jsx" },
       { id: "djaya-rasa", emoji: "🔥", title: "Analytics Qasir",      file: "warmindo-djaya-rasa-dashboard.jsx" },
       { id: "migration", emoji: "🔄", title: "Migration Tool",        file: "warmindo-migration-tool.jsx" },
+      { id: "user-menu", emoji: "👥", title: "User & Menu",           file: "warmindo-user-menu-mgmt.jsx" },
     ];
 
     // ═══════════════════════════════════════════════════════════════

@@ -1,0 +1,12 @@
+# Private operational data (Qasir exports, laporan internal)
+*.xlsx
+*.pdf
+
+# Deploy artifacts
+warmindo-deploy.zip
+warmindo-deploy/
+warmindo-dist-only.zip
+warmindo-dist-only/
+
+# Local tooling
+.claude/
